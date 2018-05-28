@@ -96,23 +96,27 @@
 
 
 
-  <meta name="description" content="coding不行，theory也不行">
-<meta property="og:type" content="website">
-<meta property="og:title" content="My blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
+<meta name="keywords" content="RNN,深度学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="循环神经网络模型：向前反向传播算法">
+<meta property="og:url" content="http://yoursite.com/2018/05/28/RNN/index.html">
 <meta property="og:site_name" content="My blog">
-<meta property="og:description" content="coding不行，theory也不行">
+<meta property="og:description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/05/28/RNN/RNN.png">
+<meta property="og:updated_time" content="2018-05-28T16:12:36.065Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="My blog">
-<meta name="twitter:description" content="coding不行，theory也不行">
+<meta name="twitter:title" content="循环神经网络模型：向前反向传播算法">
+<meta name="twitter:description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/28/RNN/RNN.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/28/RNN/"/>
 
 
 
@@ -122,7 +126,7 @@
   };
 </script>
 
-  <title>My blog</title>
+  <title>循环神经网络模型：向前反向传播算法 | My blog</title>
   
 
 
@@ -169,8 +173,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -210,7 +213,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
     <a href="/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
@@ -278,9 +281,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -312,11 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/28/RNN/" itemprop="url">
-                  循环神经网络模型：向前反向传播算法
-                </a>
+          <h1 class="post-title" itemprop="name headline">循环神经网络模型：向前反向传播算法
               
             
           </h1>
@@ -398,186 +397,16 @@
           
 
           
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。
-RNN概述
-对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/28/RNN/#更多" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/图像融合/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="masterXie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/04/图像融合/" itemprop="url">
-                  图像融合
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-04 20:27:55" itemprop="dateCreated datePublished" datetime="2018-05-04T20:27:55+08:00">2018-05-04</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-07 17:11:22" itemprop="dateModified" datetime="2018-05-07T17:11:22+08:00">2018-05-07</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机视觉/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a></span>
-
-                
-                
-              
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
             </span>
           
 
           
-            
-          
-
-          
-          
-
-          
-
-          
 
           
 
@@ -594,20 +423,51 @@ RNN概述
       
 
       
-        
-          
-          图像融合
-拉普拉斯融合
-图像金字塔方法的原理是：将参加融合的的每幅图像分解为多尺度的金字塔图像序列，将低分辨率的图像在上层，高分辨率的图像在下层，上层图像的大小为前一层图像大小的1/4。 层数为\(0,1,2……N\)。将所有图像的金字塔在相应层上以一定的规则融合，就可得到合成金字塔，再将该合成
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/04/图像融合/#更多" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p>循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。</p>
+<h2 id="rnn概述">RNN概述</h2>
+<p>对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。</p>
+<p>而对于这类问题，RNN则比较的擅长。RNN假设我们的样本是基于序列的。比如是从序列索引1到序列索引τ的。对于这其中的任意序列索引号<span class="math inline">\(t\)</span>,它对应的输入是对应的样本序列中的<span class="math inline">\(x^{(t)}\)</span>。而模型在序列索引号t位置的隐藏状态<span class="math inline">\(h^{(t)}\)</span>，则由<span class="math inline">\(x^{(t)}\)</span>和在<span class="math inline">\(t−1\)</span>位置的隐藏状态<span class="math inline">\(h^{(t-1)}\)</span>共同决定。在任意序列索引号<span class="math inline">\(t\)</span>，我们也有对应的模型预测输出<span class="math inline">\(o^{(t)}\)</span>。通过预测输出<span class="math inline">\(o^{(t)}\)</span>和训练序列真实输出<span class="math inline">\(y^{(t)}\)</span>,以及损失函数<span class="math inline">\(L^{(t)}\)</span>，我们就可以用DNN类似的方法来训练模型，接着用来预测测试序列中的一些位置的输出。</p>
+<h2 id="rnn模型">RNN模型</h2>
+<figure>
+<img src="/2018/05/28/RNN/RNN.png" alt="RNN模型示意图"><figcaption>RNN模型示意图</figcaption>
+</figure>
+<p>如图所示为RNN模型示意图，该幅图描述了在序列索引号t附近RNN的模型。其中：</p>
+<ol type="1">
+<li><p><span class="math inline">\(x^{(t)}\)</span>代表在序列索引号tt时训练样本的输入。同样的，<span class="math inline">\(x^{(t-1)}\)</span>和<span class="math inline">\(x^{(t+1)}\)</span>代表在序列索引号<span class="math inline">\(t-1\)</span>和<span class="math inline">\(t+1\)</span>时训练样本的输入。</p></li>
+<li><p><span class="math inline">\(h^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的隐藏状态。<span class="math inline">\(h^{(t)}\)</span>由<span class="math inline">\(x^{(t)}\)</span>和<span class="math inline">\(h^{(t−1)}\)</span>共同决定。</p></li>
+<li><p><span class="math inline">\(o^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的输出。<span class="math inline">\(o^{(t)}\)</span>只由模型当前的隐藏状态<span class="math inline">\(h^{(t)}\)</span>决定。</p></li>
+<li><p><span class="math inline">\(L^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的损失函数。</p></li>
+<li><p><span class="math inline">\(y^{(t)}\)</span>代表在序列索引号tt时训练样本序列的真实输出。</p></li>
+<li><p><span class="math inline">\(U,V,W\)</span>这三个矩阵是我们的模型的线性关系参数，它在整个RNN网络中是共享的，这点和DNN很不相同。 也正因为是共享了，它体现了RNN的模型的“循环反馈”的思想。</p></li>
+</ol>
+<h2 id="rnn向前传播算法">RNN向前传播算法</h2>
+<p>有了上面的模型，RNN的前向传播算法就很容易得到了。</p>
+<p>对于任意一个序列索引号<span class="math inline">\(t\)</span>，我们隐藏状态<span class="math inline">\(h^{(t)}\)</span>由<span class="math inline">\(x^{(t)}\)</span>和<span class="math inline">\(h^{(t−1)}\)</span>得到：</p>
+<p><span class="math display">\[h^{(t)}=\sigma(Ux^{(t)}+Wh^{(t)}+b)\]</span></p>
+<p>其中<span class="math inline">\(\sigma\)</span>为RNN的激活函数，一般为<span class="math inline">\(tanh\)</span>，<span class="math inline">\(b\)</span>为线性关系的偏倚。</p>
+<p>序列索引号<span class="math inline">\(t\)</span>时模型的输出<span class="math inline">\(o^{(t)}\)</span>的表达式比较简单：</p>
+<p><span class="math display">\[o^{(t)}=Vh^{(t)}+co^{(t)}=Vh^{(t)}+c\]</span></p>
+<p>在最终在序列索引号tt时我们的预测输出为:</p>
+<p><span class="math display">\[y^{(t)}=\sigma(o^{(t)})y^{(t)}=\sigma(o^{(t)})\]</span></p>
+<p>通常由于RNN是识别类的分类模型，所以上面这个激活函数一般是softmax。</p>
+<p>通过损失函数<span class="math inline">\(L^{(t)}\)</span>，比如对数似然损失函数，我们可以量化模型在当前位置的损失，即<span class="math inline">\(\hat y^{(t)}\)</span>和<span class="math inline">\(y^{(t)}\)</span>的差距。</p>
+<h2 id="rnn反向传播算法推导">RNN反向传播算法推导</h2>
+<p>为了简化描述，这里的损失函数我们为对数损失函数，输出的激活函数为softmax函数，隐藏层的激活函数为tanh函数。</p>
+<p>对于RNN，由于我们在序列的每个位置都有损失函数，因此最终的损失<span class="math inline">\(L\)</span>为：</p>
+<p><span class="math display">\[L=\sum_{t=1}^\tau L^{(t)}\]</span></p>
+<pre><code>若激活函数为sigmoid，则f&#39;(x)=f(x)(1-f(x))
+若激活函数为tanh，则f&#39;(x)=1-f(x)*f(x)</code></pre>
+<p>接下来以依次计算梯度：</p>
+<p><span class="math display">\[\frac{\partial L}{\partial c}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial c}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial o^{(o)}}\frac{\partial o^{(o)}}{\partial c}=\sum_{t=1}^\tau \hat y^{(t)}-y^{(t)}\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial V}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial V}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial o^{(o)}}\frac{\partial o^{(o)}}{\partial V}=\sum_{t=1}^\tau (\hat y^{(t)}-y^{(t)})(h^{(t)})^T\]</span></p>
+<p>对于<span class="math inline">\(W\)</span>在某一序列位置<span class="math inline">\(t\)</span>的梯度损失需要反向传播一步步的计算。我们定义序列索引<span class="math inline">\(t\)</span>位置的隐藏状态的梯度为：</p>
+<p><span class="math display">\[\delta^{(t)}=\frac{\partial L}{\partial h^{(t)}}\]</span></p>
+<p>因此有：</p>
+<p><span class="math display">\[\delta^{(t)}=\frac{\partial L}{\partial h^{(t)}}=V^T(\hat y^{(t)}-y^{(t)})\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial W}=\sum_{t=1}^\tau \frac{\partial L}{\partial h^{(t)}}\frac{\partial h^{(t)}}{\partial W}=\sum_{t=1}^\tau diag(1-(h^{(t)})^2)\delta^{(t)}(h^{(t-1)})^T\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial b}=\sum_{t=1}^\tau \frac{\partial L}{\partial h^{(t)}}\frac{\partial h^{(t)}}{\partial b}=\sum_{t=1}^\tau diag(1-(h^{(t)})^2)\delta^{(t)}\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial U}=\sum_{t=1}^\tau \frac{\partial L}{\partial h^{(t)}}\frac{\partial h^{(t)}}{\partial U}=\sum_{t=1}^\tau diag(1-(h^{(t)})^2)\delta^{(t)}(x^{(t)})^T\]</span></p>
+
       
     </div>
 
@@ -625,14 +485,38 @@ RNN概述
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/RNN/" rel="tag"># RNN</a>
+          
+            <a href="/tags/深度学习/" rel="tag"># 深度学习</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/04/图像融合/" rel="next" title="图像融合">
+                <i class="fa fa-chevron-left"></i> 图像融合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </div>
@@ -642,358 +526,19 @@ RNN概述
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/02/My-Second-Blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="masterXie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/02/My-Second-Blog/" itemprop="url">
-                  My Second Blog
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-04-02 20:33:32" itemprop="dateCreated datePublished" datetime="2018-04-02T20:33:32+08:00">2018-04-02</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-07 18:48:51" itemprop="dateModified" datetime="2018-05-07T18:48:51+08:00">2018-05-07</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/ervarev/" itemprop="url" rel="index"><span itemprop="name">ervarev</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          odsurvervrev
-ioaseurvev
-aervev
-evre
-ve5rv
-rev\(\sum_{i=1}^n a_i=0\)
-\[E=mc^w\]
-
-alt
-
-
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/02/My-Second-Blog/#更多" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/02/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="masterXie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/02/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-04-02 19:41:29" itemprop="dateCreated datePublished" datetime="2018-04-02T19:41:29+08:00">2018-04-02</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-04-06 09:45:47" itemprop="dateModified" datetime="2018-04-06T09:45:47+08:00">2018-04-06</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/02/hello-world/#更多" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -1014,8 +559,17 @@ alt
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1129,6 +683,22 @@ alt
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn概述"><span class="nav-number">1.</span> <span class="nav-text">RNN概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn模型"><span class="nav-number">2.</span> <span class="nav-text">RNN模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn向前传播算法"><span class="nav-number">3.</span> <span class="nav-text">RNN向前传播算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn反向传播算法推导"><span class="nav-number">4.</span> <span class="nav-text">RNN反向传播算法推导</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1268,6 +838,10 @@ alt
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.2.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.2.0"></script>
+
+
 
   
 
@@ -1319,16 +893,6 @@ alt
   
 
   
-  
-    
-      
-    
-      
-    
-      
-    
-      
-    
   
 
   
