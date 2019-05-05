@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1"/>
+
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.ico?v=7.1.1">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="图像融合 拉普拉斯融合 图像金字塔方法的原理是：将参加融合的的每幅图像分解为多尺度的金字塔图像序列，将低分辨率的图像在上层，高分辨率的图像在下层，上层图像的大小为前一层图像大小的1/4。 层数为\(0,1,2……N\)。将所有图像的金字塔在相应层上以一定的规则融合，就可得到合成金字塔，再将该合成金字塔按照金字塔生成的逆过程进行重构，得到融合金字塔。 高斯金字塔 高斯金字塔是最基本的图像塔。">
+<meta name="keywords" content="图像拼接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像融合">
+<meta property="og:url" content="http://yoursite.com/2018/05/04/图像融合/index.html">
+<meta property="og:site_name" content="My blog">
+<meta property="og:description" content="图像融合 拉普拉斯融合 图像金字塔方法的原理是：将参加融合的的每幅图像分解为多尺度的金字塔图像序列，将低分辨率的图像在上层，高分辨率的图像在下层，上层图像的大小为前一层图像大小的1/4。 层数为\(0,1,2……N\)。将所有图像的金字塔在相应层上以一定的规则融合，就可得到合成金字塔，再将该合成金字塔按照金字塔生成的逆过程进行重构，得到融合金字塔。 高斯金字塔 高斯金字塔是最基本的图像塔。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-07T09:11:22.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图像融合">
+<meta name="twitter:description" content="图像融合 拉普拉斯融合 图像金字塔方法的原理是：将参加融合的的每幅图像分解为多尺度的金字塔图像序列，将低分辨率的图像在上层，高分辨率的图像在下层，上层图像的大小为前一层图像大小的1/4。 层数为\(0,1,2……N\)。将所有图像的金字塔在相应层上以一定的规则融合，就可得到合成金字塔，再将该合成金字塔按照金字塔生成的逆过程进行重构，得到融合金字塔。 高斯金字塔 高斯金字塔是最基本的图像塔。">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/05/04/图像融合/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>图像融合 | My blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">My blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/图像融合/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masterXie"/>
+      <meta itemprop="description" content="coding不行，theory也不行"/>
+      <meta itemprop="image" content="/images/1.png"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="My blog"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">图像融合
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-04 20:27:55" itemprop="dateCreated datePublished" datetime="2018-05-04T20:27:55+08:00">2018-05-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-05-07 17:11:22" itemprop="dateModified" datetime="2018-05-07T17:11:22+08:00">2018-05-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机视觉/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="图像融合">图像融合</h2>
+<h3 id="拉普拉斯融合">拉普拉斯融合</h3>
+<p>图像金字塔方法的原理是：将参加融合的的每幅图像分解为多尺度的金字塔图像序列，将低分辨率的图像在上层，高分辨率的图像在下层，上层图像的大小为前一层图像大小的1/4。 层数为<span class="math inline">\(0,1,2……N\)</span>。将所有图像的金字塔在相应层上以一定的规则融合，就可得到合成金字塔，再将该合成金字塔按照金字塔生成的逆过程进行重构，得到融合金字塔。</p>
+<h4 id="高斯金字塔">高斯金字塔</h4>
+<p>高斯金字塔是最基本的图像塔。首先将原图像作为最底层图像<span class="math inline">\(G_0\)</span>（高斯金字塔的第0层），利用高斯核（5*5）对其进行卷积，然后对卷积后的图像进行下采样（去除偶数行和列） 得到上一层图像<span class="math inline">\(G_1\)</span>，将此图像作为输入，重复卷积和下采样操作得到更上一层图像，反复迭代多次，形成一个金字塔形的图像数据结构，即高斯金字塔。高斯金字塔的构建过程为：假设高斯金字塔的第<span class="math inline">\(L\)</span>层图像为<span class="math inline">\(G_l\)</span>： <span class="math display">\[G_L(i,j)=\sum_{m=-2}^2\sum_{n=-2}^{2}W(m,n)G\_{l-1}(2i+m,2j+n)​\]</span> 并且<span class="math inline">\(1\leq 1\leq N,0\leq i\leq R,0\leq j\leq C_l\)</span>,式中N为高斯金字塔顶层层号，<span class="math inline">\(R_l\)</span>和<span class="math inline">\(C_l\)</span>分别为高斯金字塔第<span class="math inline">\(l\)</span>层的行数和列数<span class="math inline">\(W(m,n)\)</span>,是一个二维可分离的5*5窗口函数，表达式为：</p>
+<p><span class="math display">\[
+W=\frac{1}{256}
+\left[
+\begin{matrix}
+1&amp;4&amp;6&amp;4&amp;1 \\
+4&amp;16&amp;24&amp;16&amp;4 \\
+6&amp;24&amp;36&amp;24&amp;6 \\
+4&amp;16&amp;24&amp;16&amp;4 \\
+1&amp;4&amp;6&amp;4&amp;1 
+\end{matrix}
+\right]
+\]</span></p>
+<p>由<span class="math inline">\(G_0\)</span>，<span class="math inline">\(G_1\)</span>，，，<span class="math inline">\(G_N\)</span>，就构成了一个高斯金字塔，其中<span class="math inline">\(G_0\)</span>为高斯金字塔的底层（与原图像相同）<span class="math inline">\(G_N\)</span>为金字塔的顶层。由此可见高斯金字塔的当前层图像就是对其前一层图像首先进行高斯低通滤波，然后再进行隔行和隔列的降2采样而生成的。前一层图像大小依次为当前层图像大小的4倍。</p>
+<h4 id="拉普拉斯字塔">拉普拉斯字塔</h4>
+<p>在高斯金字塔的运算过程中，图像经过卷积和下采样操作会丢失部分高频细节信息。 为描述这些高频信息，人们定义了拉普拉斯金字塔(Laplacian Pyramid， LP)。用高斯金字塔的每一层图像减去其上一层图像上采样并高斯卷积之后的预测图像，得到一系列的差值图像即为LP分解图像。将<span class="math inline">\(G_l\)</span>内插方法得到放大图像<span class="math inline">\(*G_I\)</span>，使<span class="math inline">\(*G_l\)</span>的尺寸与<span class="math inline">\(*G_l-1\)</span>的尺寸相同Expand:<span class="math inline">\(G^{*}_l=Expand(G_l)\)</span>,表示： <span class="math display">\[G_L^{*}(i,j)=4\sum_{m=-2}^2\sum_{n=-2}^{2}W(m,n)G_{I}(\frac{i+m}{2},\frac{j+n}{2})\]</span></p>
+<p>并且<span class="math inline">\(1\leq 1\leq N,0\leq i&lt; R,0\leq j&lt;C_l​\)</span>.对融合后的拉普拉斯金字塔，从其顶层开始逐层从上至下按下式进行递推，可以恢复其对应的高斯金字塔，并最终可得到原图像<span class="math inline">\(G_0​\)</span>。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/图像拼接/" rel="tag"># 图像拼接</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/02/My-Second-Blog/" rel="next" title="My Second Blog">
+                <i class="fa fa-chevron-left"></i> My Second Blog
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/28/RNN/" rel="prev" title="循环神经网络模型：向前反向传播算法">
+                循环神经网络模型：向前反向传播算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.png"
+                alt="masterXie"/>
+            
+              <p class="site-author-name" itemprop="name">masterXie</p>
+              <div class="site-description motion-element" itemprop="description">coding不行，theory也不行</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/chaoyuxie" title="GitHub &rarr; https://github.com/chaoyuxie" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:xcy12345@mail.ustc.edu.cn" title="E-Mail &rarr; mailto:xcy12345@mail.ustc.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://www.zhihu.com/people/xie-chao-yu-31/" title="知乎 &rarr; http://www.zhihu.com/people/xie-chao-yu-31/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#图像融合"><span class="nav-number">1.</span> <span class="nav-text">图像融合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#拉普拉斯融合"><span class="nav-number">1.1.</span> <span class="nav-text">拉普拉斯融合</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#高斯金字塔"><span class="nav-number">1.1.1.</span> <span class="nav-text">高斯金字塔</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拉普拉斯字塔"><span class="nav-number">1.1.2.</span> <span class="nav-text">拉普拉斯字塔</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masterXie</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

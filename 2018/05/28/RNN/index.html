@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1"/>
+
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.ico?v=7.1.1">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
+<meta name="keywords" content="深度学习,RNN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="循环神经网络模型：向前反向传播算法">
+<meta property="og:url" content="http://yoursite.com/2018/05/28/RNN/index.html">
+<meta property="og:site_name" content="My blog">
+<meta property="og:description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/05/28/RNN/RNN.png">
+<meta property="og:updated_time" content="2018-05-28T16:44:53.188Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="循环神经网络模型：向前反向传播算法">
+<meta name="twitter:description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/28/RNN/RNN.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/05/28/RNN/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>循环神经网络模型：向前反向传播算法 | My blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">My blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/RNN/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masterXie"/>
+      <meta itemprop="description" content="coding不行，theory也不行"/>
+      <meta itemprop="image" content="/images/1.png"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="My blog"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">循环神经网络模型：向前反向传播算法
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-28 23:08:34" itemprop="dateCreated datePublished" datetime="2018-05-28T23:08:34+08:00">2018-05-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-05-29 00:44:53" itemprop="dateModified" datetime="2018-05-29T00:44:53+08:00">2018-05-29</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/深度学习/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机视觉/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。</p>
+<h2 id="rnn概述">RNN概述</h2>
+<p>对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。</p>
+<p>而对于这类问题，RNN则比较的擅长。RNN假设我们的样本是基于序列的。比如是从序列索引1到序列索引τ的。对于这其中的任意序列索引号<span class="math inline">\(t\)</span>,它对应的输入是对应的样本序列中的<span class="math inline">\(x^{(t)}\)</span>。而模型在序列索引号t位置的隐藏状态<span class="math inline">\(h^{(t)}\)</span>，则由<span class="math inline">\(x^{(t)}\)</span>和在<span class="math inline">\(t−1\)</span>位置的隐藏状态<span class="math inline">\(h^{(t-1)}\)</span>共同决定。在任意序列索引号<span class="math inline">\(t\)</span>，我们也有对应的模型预测输出<span class="math inline">\(o^{(t)}\)</span>。通过预测输出<span class="math inline">\(o^{(t)}\)</span>和训练序列真实输出<span class="math inline">\(y^{(t)}\)</span>,以及损失函数<span class="math inline">\(L^{(t)}\)</span>，我们就可以用DNN类似的方法来训练模型，接着用来预测测试序列中的一些位置的输出。</p>
+<h2 id="rnn模型">RNN模型</h2>
+<figure>
+<img src="/2018/05/28/RNN/RNN.png" alt="RNN模型示意图"><figcaption>RNN模型示意图</figcaption>
+</figure>
+<p>如图所示为RNN模型示意图，该幅图描述了在序列索引号t附近RNN的模型。其中：</p>
+<ol type="1">
+<li><p><span class="math inline">\(x^{(t)}\)</span>代表在序列索引号tt时训练样本的输入。同样的，<span class="math inline">\(x^{(t-1)}\)</span>和<span class="math inline">\(x^{(t+1)}\)</span>代表在序列索引号<span class="math inline">\(t-1\)</span>和<span class="math inline">\(t+1\)</span>时训练样本的输入。</p></li>
+<li><p><span class="math inline">\(h^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的隐藏状态。<span class="math inline">\(h^{(t)}\)</span>由<span class="math inline">\(x^{(t)}\)</span>和<span class="math inline">\(h^{(t−1)}\)</span>共同决定。</p></li>
+<li><p><span class="math inline">\(o^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的输出。<span class="math inline">\(o^{(t)}\)</span>只由模型当前的隐藏状态<span class="math inline">\(h^{(t)}\)</span>决定。</p></li>
+<li><p><span class="math inline">\(L^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的损失函数。</p></li>
+<li><p><span class="math inline">\(y^{(t)}\)</span>代表在序列索引号tt时训练样本序列的真实输出。</p></li>
+<li><p><span class="math inline">\(U,V,W\)</span>这三个矩阵是我们的模型的线性关系参数，它在整个RNN网络中是共享的，这点和DNN很不相同。 也正因为是共享了，它体现了RNN的模型的“循环反馈”的思想。</p></li>
+</ol>
+<h2 id="rnn向前传播算法">RNN向前传播算法</h2>
+<p>有了上面的模型，RNN的前向传播算法就很容易得到了。</p>
+<p>对于任意一个序列索引号<span class="math inline">\(t\)</span>，我们隐藏状态<span class="math inline">\(h^{(t)}\)</span>由<span class="math inline">\(x^{(t)}\)</span>和<span class="math inline">\(h^{(t−1)}\)</span>得到：</p>
+<p><span class="math display">\[h^{(t)}=\sigma(Ux^{(t)}+Wh^{(t)}+b)\]</span></p>
+<p>其中<span class="math inline">\(\sigma\)</span>为RNN的激活函数，一般为<span class="math inline">\(tanh\)</span>，<span class="math inline">\(b\)</span>为线性关系的偏倚。</p>
+<p>序列索引号<span class="math inline">\(t\)</span>时模型的输出<span class="math inline">\(o^{(t)}\)</span>的表达式比较简单：</p>
+<p><span class="math display">\[o^{(t)}=Vh^{(t)}+co^{(t)}=Vh^{(t)}+c\]</span></p>
+<p>在最终在序列索引号tt时我们的预测输出为:</p>
+<p><span class="math display">\[y^{(t)}=\sigma(o^{(t)})y^{(t)}=\sigma(o^{(t)})\]</span></p>
+<p>通常由于RNN是识别类的分类模型，所以上面这个激活函数一般是softmax。</p>
+<p>通过损失函数<span class="math inline">\(L^{(t)}\)</span>，比如对数似然损失函数，我们可以量化模型在当前位置的损失，即<span class="math inline">\(\hat y^{(t)}\)</span>和<span class="math inline">\(y^{(t)}\)</span>的差距。</p>
+<h2 id="rnn反向传播算法推导">RNN反向传播算法推导</h2>
+<p>为了简化描述，这里的损失函数我们为对数损失函数，输出的激活函数为softmax函数，隐藏层的激活函数为tanh函数。</p>
+<p>对于RNN，由于我们在序列的每个位置都有损失函数，因此最终的损失<span class="math inline">\(L\)</span>为：</p>
+<p><span class="math display">\[L=\sum_{t=1}^\tau L^{(t)}\]</span></p>
+<pre><code>若激活函数为sigmoid，则f&#39;(x)=f(x)(1-f(x))
+若激活函数为tanh，则f&#39;(x)=1-f(x)*f(x)</code></pre>
+<p>接下来以依次计算梯度：</p>
+<p><span class="math display">\[\frac{\partial L}{\partial c}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial c}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial o^{(o)}}\frac{\partial o^{(o)}}{\partial c}=\sum_{t=1}^\tau \hat y^{(t)}-y^{(t)}\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial V}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial V}=\sum_{t=1}^\tau \frac{\partial L^{(t)}}{\partial o^{(o)}}\frac{\partial o^{(o)}}{\partial V}=\sum_{t=1}^\tau (\hat y^{(t)}-y^{(t)})(h^{(t)})^T\]</span></p>
+<p>对于<span class="math inline">\(W\)</span>在某一序列位置<span class="math inline">\(t\)</span>的梯度损失需要反向传播一步步的计算。我们定义序列索引<span class="math inline">\(t\)</span>位置的隐藏状态的梯度为：</p>
+<p><span class="math display">\[\delta^{(t)}=\frac{\partial L}{\partial h^{(t)}}\]</span></p>
+<p>因此有：</p>
+<p><span class="math display">\[\delta^{(t)}=\frac{\partial L}{\partial h^{(t)}}=V^T(\hat y^{(t)}-y^{(t)})\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial W}=\sum_{t=1}^\tau \frac{\partial L}{\partial h^{(t)}}\frac{\partial h^{(t)}}{\partial W}=\sum_{t=1}^\tau diag(1-(h^{(t)})^2)\delta^{(t)}(h^{(t-1)})^T\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial b}=\sum_{t=1}^\tau \frac{\partial L}{\partial h^{(t)}}\frac{\partial h^{(t)}}{\partial b}=\sum_{t=1}^\tau diag(1-(h^{(t)})^2)\delta^{(t)}\]</span></p>
+<p><span class="math display">\[\frac{\partial L}{\partial U}=\sum_{t=1}^\tau \frac{\partial L}{\partial h^{(t)}}\frac{\partial h^{(t)}}{\partial U}=\sum_{t=1}^\tau diag(1-(h^{(t)})^2)\delta^{(t)}(x^{(t)})^T\]</span></p>
+<h2 id="参考文献">参考文献</h2>
+<p>1.<a href="http://www.deeplearningbook.org/contents/rnn.html" target="_blank" rel="noopener">DL book RNN Chapter</a></p>
+<p>2.<a href="http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture10.pdf" target="_blank" rel="noopener">CS231n Convolutional Neural Networks for Visual Recognition, Stanford</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/深度学习/" rel="tag"># 深度学习</a>
+          
+            <a href="/tags/RNN/" rel="tag"># RNN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/04/图像融合/" rel="next" title="图像融合">
+                <i class="fa fa-chevron-left"></i> 图像融合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/29/LSTM/" rel="prev" title="LSTM：向前反向传播算法">
+                LSTM：向前反向传播算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.png"
+                alt="masterXie"/>
+            
+              <p class="site-author-name" itemprop="name">masterXie</p>
+              <div class="site-description motion-element" itemprop="description">coding不行，theory也不行</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/chaoyuxie" title="GitHub &rarr; https://github.com/chaoyuxie" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:xcy12345@mail.ustc.edu.cn" title="E-Mail &rarr; mailto:xcy12345@mail.ustc.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://www.zhihu.com/people/xie-chao-yu-31/" title="知乎 &rarr; http://www.zhihu.com/people/xie-chao-yu-31/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn概述"><span class="nav-number">1.</span> <span class="nav-text">RNN概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn模型"><span class="nav-number">2.</span> <span class="nav-text">RNN模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn向前传播算法"><span class="nav-number">3.</span> <span class="nav-text">RNN向前传播算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn反向传播算法推导"><span class="nav-number">4.</span> <span class="nav-text">RNN反向传播算法推导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masterXie</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
