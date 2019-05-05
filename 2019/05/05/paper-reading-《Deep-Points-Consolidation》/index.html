@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2019/05/05/paper-reading-《Deep-Points-Consolidation》/1557033328548.png">
 <meta property="og:image" content="http://yoursite.com/2019/05/05/paper-reading-《Deep-Points-Consolidation》/1557033257690.png">
-<meta property="og:updated_time" content="2019-05-05T06:01:12.193Z">
+<meta property="og:updated_time" content="2019-05-05T06:03:54.524Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="paper reading 《Deep Points Consolidation》">
 <meta name="twitter:description" content="这篇论文主要讲述了如何根据内部点（inner points）以及表面点（surface points）更好的保留物体形状。 首先文章定义了deep points\(&amp;lt;Q, P&amp;gt;\) deep points 是一对由在物体表面上的外点\(p_i\in R^3\)和在meso-skeleton上的内点\(q_i\in R^3\)组合成。  上图说明了deep points的组成原理。">
@@ -341,7 +341,7 @@
                 
               
 
-              <time title="创建时间：2019-05-05 13:06:44 / 修改时间：14:01:12" itemprop="dateCreated datePublished" datetime="2019-05-05T13:06:44+08:00">2019-05-05</time>
+              <time title="创建时间：2019-05-05 13:06:44 / 修改时间：14:03:54" itemprop="dateCreated datePublished" datetime="2019-05-05T13:06:44+08:00">2019-05-05</time>
             
 
             
@@ -432,8 +432,8 @@
 \underset{P}{\operatorname{argmin}} \sum_{i \in I} \eta\left(p_{i}\right) \sum_{c_{j} \in \mathcal{C}_{i}} \theta\left(p_{i}, c_{j}\right)\left\|p_{i}-c_{j}\right\|+\hat{R}(P)+G(P)
 \]</span></p></li>
 </ol>
-<p>regu目的：使得点向缺失部分移动。</p>
-<p>shape term目的：使得物体形状得以保留，点在物体表面不会脱离物体，也不会改变物体形状。</p>
+<p>regularization term <span class="math inline">\(\hat R\)</span> 目的：使得点向缺失部分移动。</p>
+<p>shape prior term <span class="math inline">\(G\)</span> 目的：使得物体形状得以保留，点在物体表面不会脱离物体，也不会改变物体形状。</p>
 <p>以及表面的法相也要更新。</p>
 <p>最终形成了dpoints representation。</p>
 
