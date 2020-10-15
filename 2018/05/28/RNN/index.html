@@ -428,11 +428,12 @@
 <p>对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。</p>
 <p>而对于这类问题，RNN则比较的擅长。RNN假设我们的样本是基于序列的。比如是从序列索引1到序列索引τ的。对于这其中的任意序列索引号<span class="math inline">\(t\)</span>,它对应的输入是对应的样本序列中的<span class="math inline">\(x^{(t)}\)</span>。而模型在序列索引号t位置的隐藏状态<span class="math inline">\(h^{(t)}\)</span>，则由<span class="math inline">\(x^{(t)}\)</span>和在<span class="math inline">\(t−1\)</span>位置的隐藏状态<span class="math inline">\(h^{(t-1)}\)</span>共同决定。在任意序列索引号<span class="math inline">\(t\)</span>，我们也有对应的模型预测输出<span class="math inline">\(o^{(t)}\)</span>。通过预测输出<span class="math inline">\(o^{(t)}\)</span>和训练序列真实输出<span class="math inline">\(y^{(t)}\)</span>,以及损失函数<span class="math inline">\(L^{(t)}\)</span>，我们就可以用DNN类似的方法来训练模型，接着用来预测测试序列中的一些位置的输出。</p>
 <h2 id="rnn模型">RNN模型</h2>
-<figure>
-<img src="/2018/05/28/RNN/RNN.png" alt="RNN模型示意图"><figcaption>RNN模型示意图</figcaption>
-</figure>
+<div class="figure">
+<img src="/2018/05/28/RNN/RNN.png" alt="RNN模型示意图">
+<p class="caption">RNN模型示意图</p>
+</div>
 <p>如图所示为RNN模型示意图，该幅图描述了在序列索引号t附近RNN的模型。其中：</p>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li><p><span class="math inline">\(x^{(t)}\)</span>代表在序列索引号tt时训练样本的输入。同样的，<span class="math inline">\(x^{(t-1)}\)</span>和<span class="math inline">\(x^{(t+1)}\)</span>代表在序列索引号<span class="math inline">\(t-1\)</span>和<span class="math inline">\(t+1\)</span>时训练样本的输入。</p></li>
 <li><p><span class="math inline">\(h^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的隐藏状态。<span class="math inline">\(h^{(t)}\)</span>由<span class="math inline">\(x^{(t)}\)</span>和<span class="math inline">\(h^{(t−1)}\)</span>共同决定。</p></li>
 <li><p><span class="math inline">\(o^{(t)}\)</span>代表在序列索引号<span class="math inline">\(t\)</span>时模型的输出。<span class="math inline">\(o^{(t)}\)</span>只由模型当前的隐藏状态<span class="math inline">\(h^{(t)}\)</span>决定。</p></li>
@@ -618,7 +619,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -718,7 +723,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

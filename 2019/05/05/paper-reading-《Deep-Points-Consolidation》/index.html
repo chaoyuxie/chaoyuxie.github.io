@@ -417,21 +417,23 @@
 <p>deep points 是一对由在物体表面上的外点<span class="math inline">\(p_i\in R^3\)</span>和在meso-skeleton上的内点<span class="math inline">\(q_i\in R^3\)</span>组合成。 <img src="/2019/05/05/paper-reading-《Deep-Points-Consolidation》/1557033328548.png" alt="1557033328548"></p>
 <p>上图说明了deep points的组成原理。</p>
 <p>具体算法: <img src="/2019/05/05/paper-reading-《Deep-Points-Consolidation》/1557033257690.png" alt="1557033257690"></p>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li><p>首先所有的点都是在物体表面，使用WLOP算法将表面的点均匀化并得到每个点的法向。</p></li>
-<li><p>使用grassfire方法来使点向法向相反的方向进行移动，点停止移动的判定标准如下：</p>
-<p><span class="math display">\[
-\max _{i^{\prime} \in I_{i}^{Q}} \mathbf{n}_{i^{\prime}} \cdot \mathbf{n}_{i} \leq \cos (\omega)
-\]</span> 因为有些数据不完整，会导致有些点一直移动，为了解决这个问题，使用双边滤波函数，</p>
-<p>其中滤波器权重是基于每个内点的静态邻域中的表面点确定的。 此时点停止移动，我们称这些点为anchored points。</p></li>
-<li><p>为了形成meso-skeleton我们使用如下方法： <span class="math display">\[
-\underset{Q}{\operatorname{argmin}} \sum_{i \in I} \sum_{k \in I} \vartheta\left(q_{i}, h_{k}\right)\left\|q_{i}-h_{k}\right\|+R(Q)
-\]</span></p></li>
-<li><p>表面点的聚合：</p>
-<p>a <span class="math inline">\(L_1\)</span>-median data term, a regularization term <span class="math inline">\(\hat R\)</span>, and a shape prior term <span class="math inline">\(G\)</span>: <span class="math display">\[
-\underset{P}{\operatorname{argmin}} \sum_{i \in I} \eta\left(p_{i}\right) \sum_{c_{j} \in \mathcal{C}_{i}} \theta\left(p_{i}, c_{j}\right)\left\|p_{i}-c_{j}\right\|+\hat{R}(P)+G(P)
-\]</span></p></li>
+<li><p>使用grassfire方法来使点向法向相反的方向进行移动，点停止移动的判定标准如下：</p></li>
 </ol>
+<p><span class="math display">\[
+   \max _{i^{\prime} \in I_{i}^{Q}} \mathbf{n}_{i^{\prime}} \cdot \mathbf{n}_{i} \leq \cos (\omega)
+   \]</span> 因为有些数据不完整，会导致有些点一直移动，为了解决这个问题，使用双边滤波函数，</p>
+<p>其中滤波器权重是基于每个内点的静态邻域中的表面点确定的。 此时点停止移动，我们称这些点为anchored points。</p>
+<ol start="3" style="list-style-type: decimal">
+<li><p>为了形成meso-skeleton我们使用如下方法： <span class="math display">\[
+   \underset{Q}{\operatorname{argmin}} \sum_{i \in I} \sum_{k \in I} \vartheta\left(q_{i}, h_{k}\right)\left\|q_{i}-h_{k}\right\|+R(Q)
+   \]</span></p></li>
+<li><p>表面点的聚合：</p></li>
+</ol>
+<p>a <span class="math inline">\(L_1\)</span>-median data term, a regularization term <span class="math inline">\(\hat R\)</span>, and a shape prior term <span class="math inline">\(G\)</span>: <span class="math display">\[
+   \underset{P}{\operatorname{argmin}} \sum_{i \in I} \eta\left(p_{i}\right) \sum_{c_{j} \in \mathcal{C}_{i}} \theta\left(p_{i}, c_{j}\right)\left\|p_{i}-c_{j}\right\|+\hat{R}(P)+G(P)
+   \]</span></p>
 <p>regularization term <span class="math inline">\(\hat R\)</span> 目的：使得点向缺失部分移动。</p>
 <p>shape prior term <span class="math inline">\(G\)</span> 目的：使得物体形状得以保留，点在物体表面不会脱离物体，也不会改变物体形状。</p>
 <p>以及表面的法相也要更新。</p>
@@ -573,7 +575,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -657,7 +663,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
