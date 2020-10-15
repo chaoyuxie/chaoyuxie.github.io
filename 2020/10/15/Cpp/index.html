@@ -96,19 +96,20 @@
 
 
 
-  <meta name="description" content="Cpp 秋招总结  基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端">
+  <meta name="description" content="基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端  大端就是高字节在高地址">
+<meta name="keywords" content="秋招总结,Cpp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cpp">
 <meta property="og:url" content="http://yoursite.com/2020/10/15/Cpp/index.html">
 <meta property="og:site_name" content="My blog">
-<meta property="og:description" content="Cpp 秋招总结  基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端">
+<meta property="og:description" content="基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端  大端就是高字节在高地址">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2020/10/15/Cpp/image/unorder_map非法化.jpg">
 <meta property="og:image" content="http://yoursite.com/2020/10/15/Cpp/image/hashtable.gif">
-<meta property="og:updated_time" content="2020-10-15T15:24:28.063Z">
+<meta property="og:updated_time" content="2020-10-15T15:28:53.909Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cpp">
-<meta name="twitter:description" content="Cpp 秋招总结  基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端">
+<meta name="twitter:description" content="基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端  大端就是高字节在高地址">
 <meta name="twitter:image" content="http://yoursite.com/2020/10/15/Cpp/image/unorder_map非法化.jpg">
 
 
@@ -340,7 +341,7 @@
                 
               
 
-              <time title="创建时间：2020-10-15 22:50:02 / 修改时间：23:24:28" itemprop="dateCreated datePublished" datetime="2020-10-15T22:50:02+08:00">2020-10-15</time>
+              <time title="创建时间：2020-10-15 22:50:02 / 修改时间：23:28:53" itemprop="dateCreated datePublished" datetime="2020-10-15T22:50:02+08:00">2020-10-15</time>
             
 
             
@@ -411,11 +412,7 @@
       
 
       
-        <ul>
-<li>Cpp</li>
-<li>秋招总结</li>
-</ul>
-<h2 id="基础知识">基础知识</h2>
+        <h2 id="基础知识">基础知识</h2>
 <h4 id="raii">RAII</h4>
 <p>全称是 <strong>R</strong>esource <strong>A</strong>cquisition <strong>I</strong>s <strong>I</strong>nitialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。<em>lock_guard</em> 都利用了 <em>RAII</em>机制来实现。</p>
 <p>防止内存泄露的方式有 <strong>R</strong>AII、智能指针。</p>
@@ -802,6 +799,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/秋招总结/" rel="tag"># 秋招总结</a>
+          
+            <a href="/tags/Cpp/" rel="tag"># Cpp</a>
+          
+        </div>
+      
 
       
       
@@ -953,7 +958,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
