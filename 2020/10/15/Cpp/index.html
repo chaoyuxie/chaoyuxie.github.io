@@ -103,13 +103,13 @@
 <meta property="og:site_name" content="My blog">
 <meta property="og:description" content="基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端  大端就是高字节在高地址">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2020/10/15/Cpp/unorder_map非法化.jpg">
-<meta property="og:image" content="http://yoursite.com/2020/10/15/Cpp/hashtable.gif">
+<meta property="og:image" content="http://yoursite.com/2020/10/15/Cpp/image/unorder_map非法化.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/10/15/Cpp/image/hashtable.gif">
 <meta property="og:updated_time" content="2020-10-15T14:54:43.373Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cpp">
 <meta name="twitter:description" content="基础知识 RAII 全称是 Resource Acquisition Is Initialization ， 即“资源获取即初始化”，其核心是把资源和对象的生命周期绑定：对象创建获取资源，对象销毁释放资源。这就是的资源也有了生命周期，有了自动回收的功能。lock_guard 都利用了 RAII机制来实现。 防止内存泄露的方式有 RAII、智能指针。 大端和小端  大端就是高字节在高地址">
-<meta name="twitter:image" content="http://yoursite.com/2020/10/15/Cpp/unorder_map非法化.jpg">
+<meta name="twitter:image" content="http://yoursite.com/2020/10/15/Cpp/image/unorder_map非法化.jpg">
 
 
 
@@ -712,11 +712,11 @@
 <li>在首尾删除元素，只是会导致被指向的删除元素的迭代器失效</li>
 </ul></li>
 <li>关联式容器</li>
-<li><p>基于哈希表实现的<em>std::unordered_map/std::set</em> 导致迭代器失效，一般是插入元素导致 <em>reshash</em> 产生，如果是删除只是会导致被删除元素的迭代器失效。 <img src="/2020/10/15/Cpp/unorder_map非法化.jpg" alt="case"> ### <em>std::unordered_map</em> #### 底层实现及其解决 <em>hash</em> 冲突方法</p></li>
+<li><p>基于哈希表实现的<em>std::unordered_map/std::set</em> 导致迭代器失效，一般是插入元素导致 <em>reshash</em> 产生，如果是删除只是会导致被删除元素的迭代器失效。 <img src="image/unorder_map非法化.jpg" alt="case"> ### <em>std::unordered_map</em> #### 底层实现及其解决 <em>hash</em> 冲突方法</p></li>
 </ul>
 <p><em>std::unorder_map</em> 解决冲突方式是 <strong>拉链法</strong>（数组的每个元素都连着一个链表？）：将所有产生冲突的关键字所对应的数据全部存储在同一个线性链表中（<em>bucket</em>）。这个方法解决数据存储位置发生冲突的哈希表，整个存储结构如图 1 所示。</p>
 <div align="center">
-<img src="/2020/10/15/Cpp/hashtable.gif">
+<img src="./image/hashtable.gif">
 </div>
 <p>其中 p_i表示存储的各个键值对。</p>
 <p>当使用无序容器存储键值对时，会先申请一整块连续的存储空间，但此空间并不用来直接存储键值对，而是存储各个链表的头指针，各键值对真正的存储位置是各个链表的节点。<code>STL</code> 标准库默认选用<code>vector</code>容器存储各个链表的头指针。<code>STL</code> 标准库中，将图 1 中的各个链表称为桶 <em>bucket</em>，每个桶都有自己的编号（从 0 开始）。当有新键值对存储到无序容器中时，整个存储过程分为如下几步： + 将该键值对中 <code>key</code> 的值带入设计好的哈希函数，会得到一个哈希值: <em>H = hash(key)</em>； + 将 H 和无序容器拥有桶的数量 n 做整除运算（即<code>H % n</code>），该结果即表示应将此键值对存储到的桶的编号； + 建立一个新节点存储此键值对，同时将该节点链接到相应编号的桶上</p>

@@ -104,12 +104,12 @@
 <meta property="og:site_name" content="My blog">
 <meta property="og:description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2018/05/28/RNN/RNN.png">
+<meta property="og:image" content="http://yoursite.com/2018/05/28/RNN/RNN/RNN.png">
 <meta property="og:updated_time" content="2018-05-28T16:44:53.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="循环神经网络模型：向前反向传播算法">
 <meta name="twitter:description" content="循环神经网络 (Recurrent Neural Networks) 简称RNN广泛应用自然语言处理的中的语音识别，手书识别以及机器翻译等领域。 RNN概述 对于训练样本输入是连续的序列,且序列的长短不一，比如基于时间的序列：一段段连续的语音，一段段连续的手写文字。这些序列比较长，且长度不一，比较难直接的拆分成一个个独立的样本来通过DNN/CNN进行训练。 而对于这类问题，RNN则比较的擅长">
-<meta name="twitter:image" content="http://yoursite.com/2018/05/28/RNN/RNN.png">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/28/RNN/RNN/RNN.png">
 
 
 
@@ -429,7 +429,7 @@
 <p>而对于这类问题，RNN则比较的擅长。RNN假设我们的样本是基于序列的。比如是从序列索引1到序列索引τ的。对于这其中的任意序列索引号<span class="math inline">\(t\)</span>,它对应的输入是对应的样本序列中的<span class="math inline">\(x^{(t)}\)</span>。而模型在序列索引号t位置的隐藏状态<span class="math inline">\(h^{(t)}\)</span>，则由<span class="math inline">\(x^{(t)}\)</span>和在<span class="math inline">\(t−1\)</span>位置的隐藏状态<span class="math inline">\(h^{(t-1)}\)</span>共同决定。在任意序列索引号<span class="math inline">\(t\)</span>，我们也有对应的模型预测输出<span class="math inline">\(o^{(t)}\)</span>。通过预测输出<span class="math inline">\(o^{(t)}\)</span>和训练序列真实输出<span class="math inline">\(y^{(t)}\)</span>,以及损失函数<span class="math inline">\(L^{(t)}\)</span>，我们就可以用DNN类似的方法来训练模型，接着用来预测测试序列中的一些位置的输出。</p>
 <h2 id="rnn模型">RNN模型</h2>
 <div class="figure">
-<img src="/2018/05/28/RNN/RNN.png" alt="RNN模型示意图">
+<img src="RNN\RNN.png" alt="RNN模型示意图">
 <p class="caption">RNN模型示意图</p>
 </div>
 <p>如图所示为RNN模型示意图，该幅图描述了在序列索引号t附近RNN的模型。其中：</p>
